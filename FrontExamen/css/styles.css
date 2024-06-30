@@ -1,0 +1,48 @@
+/* css/styles.css */
+body {
+    background: linear-gradient(45deg, #83a4d4, #b6fbff);
+    color: #fff;
+}
+
+#start-container, #quiz-container, #result-container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+}
+
+button:hover {
+    background: linear-gradient(45deg, #2575fc, #6a11cb);
+}
+
+.correct {
+    background-color: #28a745 !important;
+    color: #fff;
+}
+
+.incorrect {
+    background-color: #dc3545 !important;
+    color: #fff;
+}
+
+#start-container, #quiz-container, #result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#quiz-container .container, #result-container .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#quiz-container .row, #result-container .row {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
