@@ -1,19 +1,4 @@
-// Comentario: Aquí se debería realizar una llamada a la API para obtener 30 preguntas y almacenarlas en 'questions'.
-// Ejemplo de cómo se podría hacer la llamada a la API (suponiendo que la API devuelve un array de preguntas en JSON):
-/*
-fetch('URL_DE_LA_API')
-    .then(response => response.json())
-    .then(data => {
-        questions = data;
-        selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
-        startQuiz(); // Iniciar el cuestionario después de cargar las preguntas
-    })
-    .catch(error => console.error('Error al obtener las preguntas:', error));
-*/
 
-//lo de arriba le pregunte al chatgpt JAJAJAJ
-
-// Lista de preguntas con opciones y respuestas
 let questions = [
     {
         text: "¿Cuál es la capital de Francia?",
@@ -65,11 +50,33 @@ let questions = [
         options: ["Pacífico", "Atlántico", "Índico", "Ártico"],
         answer: "Pacífico"
     },
-    // Añade aquí más preguntas hasta tener al menos 30
+   
 ];
 
-// Seleccionar aleatoriamente 10 preguntas
-let selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+async function fetchPreguntas() {
+    try {
+        const response = await fetch('http://127.0.0.1:3900/api/preguntas');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const preguntas = await response.json();
+        const content = preguntas.data
+        if (!content || content.length === 0) {
+            throw new Error('No se encontraron preguntas');
+        }
+
+        
+
+        selectedQuestions = content.sort(() => 0.5 - Math.random()).slice(0, 10);
+        // startQuiz(); // Llama a startQuiz después de obtener las preguntas
+    } catch (error) {
+        console.error('Error fetching preguntas:', error);
+    }
+}
+// let selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+fetchPreguntas();
+let selectedQuestions = [];
 
 let currentQuestionIndex = 0;
 let score = 0;
@@ -95,10 +102,10 @@ function startQuiz() {
 function showQuestion() {
     resetState();
     const question = selectedQuestions[currentQuestionIndex];
-    questionEl.innerText = question.text;
+    questionEl.innerText = question.pregunta;
 
     // Barajar las opciones
-    const shuffledOptions = question.options.sort(() => Math.random() - 0.5);
+    const shuffledOptions = question.opciones.sort(() => Math.random() - 0.5);
 
     shuffledOptions.forEach(option => {
         const button = document.createElement('button');
@@ -124,10 +131,10 @@ function resetState() {
 
 function selectAnswer(e) {
     const selectedButton = e.target;
-    const correct = selectedButton.innerText === selectedQuestions[currentQuestionIndex].answer;
+    const correct = selectedButton.innerText === selectedQuestions[currentQuestionIndex].respuesta;
     setStatusClass(document.body, correct);
     Array.from(optionsEl.children).forEach(button => {
-        setStatusClass(button, button.innerText === selectedQuestions[currentQuestionIndex].answer);
+        setStatusClass(button, button.innerText === selectedQuestions[currentQuestionIndex].respuesta);
     });
 
     if (correct) {
